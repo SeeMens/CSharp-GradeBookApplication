@@ -1,23 +1,18 @@
 ﻿using GradeBook.GradeBooks;
 using System;
 
-namespace GradeBook.UserInterfaces
-{
-    public static class StartingUserInterface
-    {
+namespace GradeBook.UserInterfaces {
+    public static class StartingUserInterface {
         public static bool Quit = false;
-        public static void CommandLoop()
-        {
-            while (!Quit)
-            {
+        public static void CommandLoop() {
+            while (!Quit) {
                 Console.WriteLine("What would you like to do?");
                 var command = Console.ReadLine().ToLower();
                 CommandRoute(command);
             }
         }
 
-        public static void CommandRoute(string command)
-        {
+        public static void CommandRoute(string command) {
             if (command.StartsWith("create"))
                 CreateCommand(command);
             else if (command.StartsWith("load"))
@@ -30,11 +25,9 @@ namespace GradeBook.UserInterfaces
                 Console.WriteLine("{0} was not recognized, please try again.", command);
         }
 
-        public static void CreateCommand(string command)
-        {
+        public static void CreateCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 2)
-            {
+            if (parts.Length != 2) {
                 Console.WriteLine("Command not valid, Create requires a name.");
                 return;
             }
@@ -44,11 +37,9 @@ namespace GradeBook.UserInterfaces
             GradeBookUserInterface.CommandLoop(gradeBook);
         }
 
-        public static void LoadCommand(string command)
-        {
+        public static void LoadCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 2)
-            {
+            if (parts.Length != 2) {
                 Console.WriteLine("Command not valid, Load requires a name.");
                 return;
             }
@@ -61,8 +52,7 @@ namespace GradeBook.UserInterfaces
             GradeBookUserInterface.CommandLoop(gradeBook);
         }
 
-        public static void HelpCommand()
-        {
+        public static void HelpCommand() {
             Console.WriteLine("GradeBook accepts the following commands:");
             Console.WriteLine();
             Console.WriteLine("Create 'Name' - Creates a new gradebook where 'Name' is the name of the gradebook.");

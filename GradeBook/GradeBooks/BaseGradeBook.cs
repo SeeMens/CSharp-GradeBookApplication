@@ -7,107 +7,95 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace GradeBook.GradeBooks
-{
-    public class BaseGradeBook
-    {
-        public string Name { get; set; }
-        public List<Student> Students { get; set; }
+namespace GradeBook.GradeBooks {
+    public class BaseGradeBook {
+        public string Name {
+            get; set;
+        }
+        public List<Student> Students {
+            get; set;
+        }
 
-        public BaseGradeBook(string name)
-        {
+        public GradeBookType type {
+            get;
+            set;
+        }
+
+        public BaseGradeBook(string name) {
             Name = name;
             Students = new List<Student>();
         }
 
-        public void AddStudent(Student student)
-        {
+        public void AddStudent(Student student) {
             if (string.IsNullOrEmpty(student.Name))
                 throw new ArgumentException("A Name is required to add a student to a gradebook.");
             Students.Add(student);
         }
 
-        public void RemoveStudent(string name)
-        {
+        public void RemoveStudent(string name) {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("A Name is required to remove a student from a gradebook.");
             var student = Students.FirstOrDefault(e => e.Name == name);
-            if (student == null)
-            {
+            if (student == null) {
                 Console.WriteLine("student {0} was not found, try again.", name);
                 return;
             }
             Students.Remove(student);
         }
 
-        public void AddGrade(string name, double score)
-        {
+        public void AddGrade(string name, double score) {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("A Name is required to add a grade to a student.");
             var student = Students.FirstOrDefault(e => e.Name == name);
-            if (student == null)
-            {
+            if (student == null) {
                 Console.WriteLine("student {0} was not found, try again.", name);
                 return;
             }
             student.AddGrade(score);
         }
 
-        public void RemoveGrade(string name, double score)
-        {
+        public void RemoveGrade(string name, double score) {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("A Name is required to remove a grade from a student.");
             var student = Students.FirstOrDefault(e => e.Name == name);
-            if (student == null)
-            {
+            if (student == null) {
                 Console.WriteLine("student {0} was not found, try again.", name);
                 return;
             }
             student.RemoveGrade(score);
         }
 
-        public void ListStudents()
-        {
-            foreach (var student in Students)
-            {
+        public void ListStudents() {
+            foreach (var student in Students) {
                 Console.WriteLine("{0} : {1} : {2}", student.Name, student.Type, student.Enrollment);
             }
         }
 
-        public static BaseGradeBook Load(string name)
-        {
-            if (!File.Exists(name + ".gdbk"))
-            {
+        public static BaseGradeBook Load(string name) {
+            if (!File.Exists(name + ".gdbk")) {
                 Console.WriteLine("Gradebook could not be found.");
                 return null;
             }
 
-            using (var file = new FileStream(name + ".gdbk", FileMode.Open, FileAccess.Read))
-            {
-                using (var reader = new StreamReader(file))
-                {
+            using (var file = new FileStream(name + ".gdbk", FileMode.Open, FileAccess.Read)) {
+                using (var reader = new StreamReader(file)) {
                     var json = reader.ReadToEnd();
                     return ConvertToGradeBook(json);
                 }
             }
         }
 
-        public void Save()
-        {
-            using (var file = new FileStream(Name + ".gdbk", FileMode.Create, FileAccess.Write))
-            {
-                using (var writer = new StreamWriter(file))
-                {
+        public void Save() {
+            using (var file = new FileStream(Name + ".gdbk", FileMode.Create, FileAccess.Write)) {
+                using (var writer = new StreamWriter(file)) {
                     var json = JsonConvert.SerializeObject(this);
                     writer.Write(json);
                 }
             }
         }
 
-        public virtual double GetGPA(char letterGrade, StudentType studentType)
-        {
-            switch (letterGrade)
-            {
+        public virtual double GetGPA(char letterGrade, StudentType studentType) {
+            switch (letterGrade) {
                 case 'A':
                     return 4;
                 case 'B':
@@ -120,8 +108,7 @@ namespace GradeBook.GradeBooks
             return 0;
         }
 
-        public virtual void CalculateStatistics()
-        {
+        public virtual void CalculateStatistics() {
             var allStudentsPoints = 0d;
             var campusPoints = 0d;
             var statePoints = 0d;
@@ -131,16 +118,14 @@ namespace GradeBook.GradeBooks
             var honorPoints = 0d;
             var dualEnrolledPoints = 0d;
 
-            foreach (var student in Students)
-            {
+            foreach (var student in Students) {
                 student.LetterGrade = GetLetterGrade(student.AverageGrade);
                 student.GPA = GetGPA(student.LetterGrade, student.Type);
 
                 Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
                 allStudentsPoints += student.AverageGrade;
 
-                switch (student.Enrollment)
-                {
+                switch (student.Enrollment) {
                     case EnrollmentType.Campus:
                         campusPoints += student.AverageGrade;
                         break;
@@ -155,8 +140,7 @@ namespace GradeBook.GradeBooks
                         break;
                 }
 
-                switch (student.Type)
-                {
+                switch (student.Type) {
                     case StudentType.Standard:
                         standardPoints += student.AverageGrade;
                         break;
@@ -187,8 +171,7 @@ namespace GradeBook.GradeBooks
                 Console.WriteLine("Average for only duel enrolled students is " + (dualEnrolledPoints / Students.Where(e => e.Type == StudentType.DualEnrolled).Count()));
         }
 
-        public virtual void CalculateStudentStatistics(string name)
-        {
+        public virtual void CalculateStudentStatistics(string name) {
             var student = Students.FirstOrDefault(e => e.Name == name);
             student.LetterGrade = GetLetterGrade(student.AverageGrade);
             student.GPA = GetGPA(student.LetterGrade, student.Type);
@@ -196,14 +179,12 @@ namespace GradeBook.GradeBooks
             Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
             Console.WriteLine();
             Console.WriteLine("Grades:");
-            foreach (var grade in student.Grades)
-            {
+            foreach (var grade in student.Grades) {
                 Console.WriteLine(grade);
             }
         }
 
-        public virtual char GetLetterGrade(double averageGrade)
-        {
+        public virtual char GetLetterGrade(double averageGrade) {
             if (averageGrade >= 90)
                 return 'A';
             else if (averageGrade >= 80)
@@ -223,8 +204,7 @@ namespace GradeBook.GradeBooks
         /// </summary>
         /// <returns>The to grade book.</returns>
         /// <param name="json">Json.</param>
-        public static dynamic ConvertToGradeBook(string json)
-        {
+        public static dynamic ConvertToGradeBook(string json) {
             // Get GradeBookType from the GradeBook.Enums namespace
             var gradebookEnum = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                  from type in assembly.GetTypes()
@@ -240,8 +220,7 @@ namespace GradeBook.GradeBooks
                  where type.FullName == "GradeBook.GradeBooks.StandardGradeBook"
                  select type).FirstOrDefault() == null)
                 gradeBookType = "Base";
-            else
-            {
+            else {
                 if (string.IsNullOrEmpty(gradeBookType))
                     gradeBookType = "Standard";
                 else
@@ -261,7 +240,7 @@ namespace GradeBook.GradeBooks
                              from type in assembly.GetTypes()
                              where type.FullName == "GradeBook.GradeBooks.StandardGradeBook"
                              select type).FirstOrDefault();
-            
+
             return JsonConvert.DeserializeObject(json, gradebook);
         }
     }

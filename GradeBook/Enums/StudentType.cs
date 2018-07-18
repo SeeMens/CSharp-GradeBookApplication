@@ -1,7 +1,5 @@
-﻿namespace GradeBook.Enums
-{
-    public enum StudentType
-    {
+﻿namespace GradeBook.Enums {
+    public enum StudentType {
         Standard,
         Honors,
         DualEnrolled

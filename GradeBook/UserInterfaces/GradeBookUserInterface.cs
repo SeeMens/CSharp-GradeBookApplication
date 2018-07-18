@@ -2,14 +2,11 @@
 using GradeBook.GradeBooks;
 using System;
 
-namespace GradeBook.UserInterfaces
-{
-    public static class GradeBookUserInterface
-    {
+namespace GradeBook.UserInterfaces {
+    public static class GradeBookUserInterface {
         public static BaseGradeBook GradeBook;
         public static bool Quit = false;
-        public static void CommandLoop(BaseGradeBook gradeBook)
-        {
+        public static void CommandLoop(BaseGradeBook gradeBook) {
             GradeBook = gradeBook;
             Quit = false;
 
@@ -18,8 +15,7 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine("#=======================#");
             Console.WriteLine(string.Empty);
 
-            while(!Quit)
-            {
+            while (!Quit) {
                 Console.WriteLine("What would you like to do?");
                 var command = Console.ReadLine().ToLower();
                 CommandRoute(command);
@@ -28,8 +24,7 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine(GradeBook.Name + " has been closed.");
         }
 
-        public static void CommandRoute(string command)
-        {
+        public static void CommandRoute(string command) {
             if (command == "save")
                 SaveCommand();
             else if (command.StartsWith("addgrade"))
@@ -54,17 +49,14 @@ namespace GradeBook.UserInterfaces
                 Console.WriteLine("{0} was not recognized, please try again.", command);
         }
 
-        public static void SaveCommand()
-        {
+        public static void SaveCommand() {
             GradeBook.Save();
             Console.WriteLine("{0} has been saved.", GradeBook.Name);
         }
-        
-        public static void AddGradeCommand(string command)
-        {
+
+        public static void AddGradeCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 3)
-            {
+            if (parts.Length != 3) {
                 Console.WriteLine("Command not valid, AddGrade requires a name and score.");
                 return;
             }
@@ -74,11 +66,9 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine("Added a score of {0} to {1}'s grades", score, name);
         }
 
-        public static void RemoveGradeCommand(string command)
-        {
+        public static void RemoveGradeCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 3)
-            {
+            if (parts.Length != 3) {
                 Console.WriteLine("Command not valid, RemoveGrade requires a name and score.");
                 return;
             }
@@ -88,26 +78,22 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine("Removed a score of {0} from {1}'s grades", score, name);
         }
 
-        public static void AddStudentCommand(string command)
-        {
+        public static void AddStudentCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 4)
-            {
+            if (parts.Length != 4) {
                 Console.WriteLine("Command not valid, Add requires a name, student type, enrollment type.");
                 return;
             }
             var name = parts[1];
 
             StudentType studentType;
-            if (!Enum.TryParse(parts[2], true, out studentType))
-            {
+            if (!Enum.TryParse(parts[2], true, out studentType)) {
                 Console.WriteLine("{0} is not a valid student type, try again.", parts[2]);
                 return;
             }
 
             EnrollmentType enrollmentType;
-            if (!Enum.TryParse(parts[3], true, out enrollmentType))
-            {
+            if (!Enum.TryParse(parts[3], true, out enrollmentType)) {
                 Console.WriteLine("{0} is not a volid enrollment type, try again.", parts[3]);
                 return;
             }
@@ -116,12 +102,10 @@ namespace GradeBook.UserInterfaces
             GradeBook.AddStudent(student);
             Console.WriteLine("Added {0} to the gradebook.", name);
         }
-        
-        public static void RemoveStudentCommand(string command)
-        {
+
+        public static void RemoveStudentCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 2)
-            {
+            if (parts.Length != 2) {
                 Console.WriteLine("Command not valid, Remove requires a name.");
                 return;
             }
@@ -130,21 +114,17 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine("Removed {0} from the gradebook.", name);
         }
 
-        public static void ListCommand()
-        {
+        public static void ListCommand() {
             GradeBook.ListStudents();
         }
-        
-        public static void StatisticsCommand()
-        {
+
+        public static void StatisticsCommand() {
             GradeBook.CalculateStatistics();
         }
 
-        public static void StudentStatisticsCommand(string command)
-        {
+        public static void StudentStatisticsCommand(string command) {
             var parts = command.Split(' ');
-            if (parts.Length != 2)
-            {
+            if (parts.Length != 2) {
                 Console.WriteLine("Command not valid, Requires Name or All.");
                 return;
             }
@@ -152,8 +132,7 @@ namespace GradeBook.UserInterfaces
             GradeBook.CalculateStudentStatistics(name);
         }
 
-        public static void HelpCommand()
-        {
+        public static void HelpCommand() {
             Console.WriteLine("While a gradebook is open you can use the following commands:");
             Console.WriteLine();
             Console.WriteLine("Add 'Name' 'Student Type' 'Enrollment Type' - Adds a new student to the gradebook with the provided name, type of student, and type of enrollment.");
