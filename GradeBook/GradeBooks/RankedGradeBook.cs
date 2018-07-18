@@ -19,13 +19,13 @@ namespace GradeBook.GradeBooks {
                 var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
 
                 if (grades[temp - 1] <= averageGrade) {
-                    result = 'A';
+                    return 'A';
                 } else if (grades[2 * temp - 1] <= averageGrade) {
-                    result = 'B';
+                    return 'B';
                 } else if (grades[3 * temp - 1] <= averageGrade) {
-                    result = 'C';
+                    return 'C';
                 } else if (grades[4 * temp - 1] <= averageGrade) {
-                    result = 'D';
+                    return 'D';
                 }
 
             }
