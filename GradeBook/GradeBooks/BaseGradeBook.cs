@@ -16,7 +16,7 @@ namespace GradeBook.GradeBooks {
             get; set;
         }
 
-        public GradeBookType type {
+        public GradeBookType Type {
             get;
             set;
         }
