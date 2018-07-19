@@ -135,38 +135,43 @@ namespace GradeBook.GradeBooks {
             var dualEnrolledPoints = 0d;
 
             foreach (var student in Students) {
-                student.LetterGrade = GetLetterGrade(student.AverageGrade);
-                student.GPA = GetGPA(student.LetterGrade, student.Type);
+                try {
+                    student.LetterGrade = GetLetterGrade(student.AverageGrade);
+                    student.GPA = GetGPA(student.LetterGrade, student.Type);
 
-                Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
-                allStudentsPoints += student.AverageGrade;
+                    Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
+                    allStudentsPoints += student.AverageGrade;
 
-                switch (student.Enrollment) {
-                    case EnrollmentType.Campus:
-                        campusPoints += student.AverageGrade;
-                        break;
-                    case EnrollmentType.State:
-                        statePoints += student.AverageGrade;
-                        break;
-                    case EnrollmentType.National:
-                        nationalPoints += student.AverageGrade;
-                        break;
-                    case EnrollmentType.International:
-                        internationalPoints += student.AverageGrade;
-                        break;
+                    switch (student.Enrollment) {
+                        case EnrollmentType.Campus:
+                            campusPoints += student.AverageGrade;
+                            break;
+                        case EnrollmentType.State:
+                            statePoints += student.AverageGrade;
+                            break;
+                        case EnrollmentType.National:
+                            nationalPoints += student.AverageGrade;
+                            break;
+                        case EnrollmentType.International:
+                            internationalPoints += student.AverageGrade;
+                            break;
+                    }
+
+                    switch (student.Type) {
+                        case StudentType.Standard:
+                            standardPoints += student.AverageGrade;
+                            break;
+                        case StudentType.Honors:
+                            honorPoints += student.AverageGrade;
+                            break;
+                        case StudentType.DualEnrolled:
+                            dualEnrolledPoints += student.AverageGrade;
+                            break;
+                    }
+                } catch {
+
                 }
-
-                switch (student.Type) {
-                    case StudentType.Standard:
-                        standardPoints += student.AverageGrade;
-                        break;
-                    case StudentType.Honors:
-                        honorPoints += student.AverageGrade;
-                        break;
-                    case StudentType.DualEnrolled:
-                        dualEnrolledPoints += student.AverageGrade;
-                        break;
-                }
+                
             }
 
             //#todo refactor into it's own method with calculations performed here
@@ -188,16 +193,24 @@ namespace GradeBook.GradeBooks {
         }
 
         public virtual void CalculateStudentStatistics(string name) {
-            var student = Students.FirstOrDefault(e => e.Name == name);
-            student.LetterGrade = GetLetterGrade(student.AverageGrade);
-            student.GPA = GetGPA(student.LetterGrade, student.Type);
+            try {
+                var student = Students.FirstOrDefault(e => e.Name == name);
+                if (student == null) {
+                    Console.WriteLine("student {0} was not found, try again.", name);
+                    return;
+                }
+                student.LetterGrade = GetLetterGrade(student.AverageGrade);
+                student.GPA = GetGPA(student.LetterGrade, student.Type);
 
-            Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
-            Console.WriteLine();
-            Console.WriteLine("Grades:");
-            foreach (var grade in student.Grades) {
-                Console.WriteLine(grade);
-            }
+                Console.WriteLine("{0} ({1}:{2}) GPA: {3}.", student.Name, student.LetterGrade, student.AverageGrade, student.GPA);
+                Console.WriteLine();
+                Console.WriteLine("Grades:");
+                foreach (var grade in student.Grades) {
+                    Console.WriteLine(grade);
+                }
+            } catch(Exception ex) {
+                Console.WriteLine("Students has no Grades");
+            }       
         }
 
         public virtual char GetLetterGrade(double averageGrade) {
