@@ -39,7 +39,7 @@ namespace GradeBook.UserInterfaces {
             if (type == "standard") {
                 gradeBook = new StandardGradeBook(name, isWeighted);
             } else if (type == "ranked") {
-                gradeBook = new RankedGradeBook(name, isWeighted));
+                gradeBook = new RankedGradeBook(name, isWeighted);
             } else {
                 Console.WriteLine(type + " is not a supported type of gradebook, please try again");
                 return;
